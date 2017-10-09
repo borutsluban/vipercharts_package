@@ -1,3 +1,4 @@
 # vipercharts_package
-Python package for ViperCharts visualizations. - WORK IN PROGRESS
+WORK IN PROGRESS - Python package for ViperCharts visualizations.
+
 Includes contribitions by Borut Sluban, Marko Lalović, and Jan Kralj.
