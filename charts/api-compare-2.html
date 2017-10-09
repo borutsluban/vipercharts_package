@@ -1,0 +1,183 @@
+{% extends "charts/api-frame.html" %}
+
+{% block content %}
+    <div class="container marketing">
+      <div>
+                    	<h3>Comparison of 2 algorithms on {{ numberOfDataSets }} data sets</h3>
+            <hr>
+				<div id="multi-chart">
+				</div>
+		    <hr>
+				<h4>Results - Wilcoxon signed rank test</h4>
+				<p>
+				</p>
+			<div id="embedded-table">
+				<table class="embedded-table">
+					<thead>
+						<tr scope="col"><!--<th>&nbsp;</th>-->
+							<th class = "tablecelltitle"> Measure </th>
+							<th class = "tablecelltitle"> Wilcoxon <i>T</i>-score</th>
+							<th class = "tablecelltitle"> Verdict </th>
+							<th class = "tablecelltitle"> Number of wins </th>
+							<th class = "tablecelltitle"> Verdict </th>
+						</tr>
+						<tr>
+							<th class = "tablecellsubtitle"> (hypothesis rejected if)</th>
+							<th class = "tablecellsubtitle">(smaller than {{ critValue }})</th>
+							<th></th>
+							<th class = "tablecellsubtitle">(greater than {{ signCritValue }})</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+						<tr class="tablerow" style="background:#fafafa;">
+							<th class="tablecellcenter"> {{ measureName }} </th>
+							<td class="tablecellcenter"> {{ Tvalue }} </td>
+							<td class="tablecellcenter"> 
+									
+										{{ verdictWilcoxon }}
+									
+							</td>
+							<td> {{ signTestResult }} </td> <!--wins are counted for the second algorithm-->
+							<td class="tablecellcenter">
+								
+									{{ verdictSignTest }}
+								
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+			</div>
+		</div>
+
+    <script>
+$(document).ready(function () { 
+		var measures = [
+			
+				'{{ measureName }}'
+			
+			]
+	    var ticks = []
+	    for (var i = 0; i < 2 - 1; i++){
+		    ticks.push(i);
+	    }
+	    var critvalue = {{ critValue }};
+		
+        var chart = new Highcharts.Chart({
+            chart: {
+				renderTo: 'multi-chart', //'comparison',
+                type: 'bar',
+				zoomType: 'xy',
+				animation: false,
+				marginRight: 70,
+				spacingLeft: 0,
+				spacingTop: 0,
+				marginTop: 10,
+				spacingBottom: 20,
+            },
+			events: {
+				selection: function(event){
+					chart.labels.enable =  false;
+					return true;
+				}
+			},
+			title: {
+				text: ''
+			},
+			subtitle: {
+				text: ''
+			},
+			
+            xAxis: [{
+                categories: measures,
+                reversed: true,
+				gridLineWidth: 1,
+				lineWidth: 0,
+				lineColor: 'black',
+				gridLineColor: 'black',
+				tickColor: 'black',
+				tickInterval: 1,
+				startOnTick: true,
+				endOnTick: false,
+				labels: {
+					style:{
+						color: 'black'
+					}
+				},
+				//tickPositions: ticks	
+            }, { // mirror axis on right side
+                opposite: true,
+                linkedTo: 0,
+				
+                reversed: true,
+                categories: measures,
+				gridLineWidth: 0,
+				lineWidth: 0,
+				lineColor: 'black',
+				tickColor: 'black',
+				//tickPositions: ticks,
+				labels: {
+					style:{
+						color: 'black'
+					}
+				}
+            }],
+			
+			yAxis: {
+                title: {
+                    text: null
+                },
+                min: -{{ Tmax }},
+                max: {{ Tmax }},
+				
+				LineWidth: 1,
+				gridLineWidth: 0,
+				
+                plotLines: [{
+                    color: '#000000',
+                    width: 1,
+                    dashStyle: 'Dash',
+                    value: {{ Tmax }} - {{ critValue }},
+                    zIndex: 6
+                }, {
+                    color: '#000000',
+                    width: 1,
+                    dashStyle: 'Dash',
+                    value: -{{ Tmax }} + {{ critValue }},
+                    zIndex: 6
+                }],
+                plotBands: [{ // mark the weekend
+                    color: 'rgba(252,255,197, 0.2)',
+                    from: -{{ Tmax }} + {{ critValue }},
+                    to: {{ Tmax }} - {{ critValue }},
+                    zIndex: 5
+                }]
+            },
+
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+
+            credits: {
+                enabled: false
+            },
+
+            series: [{
+                name: '{{ alg0 }}',
+				data: [
+					
+                    {{ data0 }}
+					
+					],
+				zIndex: 0,
+				color: 'green'
+				}]
+        });
+    });
+	</script>
+    </script>
+{% endblock %}

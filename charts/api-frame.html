@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ViperCharts - Visual Performance Evaluation Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="../js/jquery-1.7.1.min.js"></script>
+    <script src="../js/highcharts-all-4.0.4.js"></script> <!--3.0.10-tooltip-id-->
+	<!--<script src="{{STATIC_URL}}js/highcharts-3.0.10-tooltip-id.js"></script>
+	<script src="{{STATIC_URL}}js/highcharts-exporting-3.0.10.js"></script>-->
+
+    <style>
+        .box{
+            position: relative;
+            width: 100%;		/* desired width */
+        }
+        .box:before{
+            content: "";
+            display: block;
+            padding-top: 100%; 	/* initial ratio of 1:1*/
+        }
+        .ratio5_3:before{
+            content: "";
+            display: block;
+            padding-top: 60%; 	/* initial ratio of 5:3*/
+        }
+        .content{
+            position:  absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+  </head>
+
+  <body>
+	{% block content%}{% endblock %}
+  </body>
+</html>

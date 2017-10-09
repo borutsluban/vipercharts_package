@@ -1,0 +1,123 @@
+{% extends "charts/api-frame.html" %}
+
+{% block content %}
+    <div class="container marketing">
+
+      <!-- START THE FEATURETTES  class="featurette"-->
+	  
+      <div>
+                    	<h3>Comparison of {{ numberOfAlgorithms }} algorithms on {{ numberOfDataSets }} data sets with significance level {{ alpha }}</h3>
+            <hr>
+				<h4>Critical difference visualization (Nemenyi post hoc test)</h4>
+				<!--<h4>Visualization of the performance of two algorithms on multiple data sets<span class="muted"></span></h4>-->
+				<div id="multi-chart">
+				</div>
+		    <hr>
+				<h4>Results - Friedman test</h4>
+				<p>
+				</p>
+				<div id="embedded-table">
+					<table class="embedded-table">
+						<thead>
+							<tr scope="col">
+								<th class = "tablecelltitle"> Measure </th>
+								<th class = "tablecelltitle"> Friedman <i>F<sub>F</sub></i> score</th>
+								<th class = "tablecelltitle"> Friedman <i>p</i>-value
+								<th class = "tablecelltitle"> Verdict </th>
+							</tr>
+						</thead>
+						<tbody>
+							
+								<tr class="tablerow" style="background:#fafafa;">
+									<th class="tablecellcenter"> SCORES </th>
+									<td class="tablecellcenter"> {{ friedmanF }} </td>
+									<td class="tablecellcenter"> {{ friedmanP }} </td>
+									<td class="tablecellcenter">				
+											{{ significance }}
+										
+									</td>
+								</tr>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+    <script>
+	$(document).ready(function () { 
+
+		var chart = new Highcharts.Chart({
+            chart: {
+                type: 'spline',
+                renderTo: 'multi-chart',
+				height: {{ chartSize }},
+				//width: 300
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                opposite: true,
+                min: {{ xmin }},
+                max: {{ xmax }},
+                reversed: true,
+                startOnTick: true,
+                endOnTick: true,
+                lineWidth: 1,
+				//hack:
+				offset: - 212 * 1.3 / (1 * 0.4 + 1.5) + 1
+            },
+            yAxis: {
+                labels: {
+                    enabled: false
+                },
+                title: null,
+                endOnTick: false,
+                startOnTick: false,
+                gridLineWidth: 0,
+                min: {{ ymin }},
+                max: 1.3
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+			series:[
+			
+				{{ series1 }}
+			
+			
+                {{ series2 }}
+			
+			{
+				marker: {enabled: true}, 
+				name: 'Critical difference',
+				showInLegend: false,
+				data: [[{{ xmax }} - {{ critDist }}, 1], [{{ xmax }}, 1]]
+			}
+			],
+			tooltip: {
+						useHTML: true,
+						formatter: function() {
+							{
+								
+                                    {{ tooltip1 }}
+
+                                    {{ tooltip2 }}
+								
+								return 'Critical difference: {{ critDistRounded }}';
+							}
+						}
+					}
+        });
+	});
+	</script>
+    </script>
+{% endblock %}
